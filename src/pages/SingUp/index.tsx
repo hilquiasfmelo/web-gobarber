@@ -1,33 +1,30 @@
-import React, { useCallback, useContext, useRef } from 'react';
-import { Form } from '@unform/web';
+import React, { useCallback, useRef } from 'react';
 import { FormHandles } from '@unform/core';
-import { FiLock, FiLogIn, FiMail } from 'react-icons/fi';
+import { Form } from '@unform/web';
 import * as Valid from 'yup';
+import {
+  FiLock, FiMail, FiUser, FiArrowLeft,
+} from 'react-icons/fi';
+
 import LogoImg from '../../assets/logo.svg';
+
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
+
 import { Container, Content, Background } from './styles';
 import { GetValidationErrors } from '../../utils/GetValidationErrors';
-import { AuthContext } from '../../context/AuthContext';
 
-type SignInFormData = {
-  email: string;
-  password: string;
-}
-
-export const SingIn: React.FC = () => {
+export const SingUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const { signIn } = useContext(AuthContext);
-
-  const handleSubmit = useCallback(async (data: SignInFormData) => {
-    // Validação
+  const handleSubmit = useCallback(async (data: object) => {
     try {
       formRef.current?.setErrors({});
 
       const schema = Valid.object().shape({
+        name: Valid.string().required('Nome obrigatório'),
         email: Valid.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
-        password: Valid.string().required('Senha obrigatória'),
+        password: Valid.string().min(6, 'No mínimo 6 dígitos'),
       });
 
       await schema.validate(data, {
@@ -39,34 +36,29 @@ export const SingIn: React.FC = () => {
         formRef.current?.setErrors(errors);
       }
     }
-
-    signIn({
-      email: data.email,
-      password: data.password,
-    });
-  }, [signIn]);
+  }, []);
 
   return (
     <Container>
+      <Background />
+
       <Content>
         <img src={LogoImg} alt="GoBarber" />
 
         <Form ref={formRef} onSubmit={handleSubmit}>
-          <h1>Faça seu login</h1>
+          <h1>Faça seu cadastro</h1>
+          <Input name="name" type="text" icon={FiUser} placeholder="Seu nome" />
           <Input name="email" type="text" icon={FiMail} placeholder="Seu melhor e-Mail" />
           <Input name="password" type="password" icon={FiLock} placeholder="Sua senha preferida" />
 
-          <Button type="submit">Entrar</Button>
-          <a href="forgot">Esqueci minha senha</a>
+          <Button type="submit">Cadastrar</Button>
         </Form>
 
         <a href="account">
-          <FiLogIn />
-          Criar Conta
+          <FiArrowLeft />
+          Voltar para logon
         </a>
       </Content>
-
-      <Background />
     </Container>
   );
 };
