@@ -8,7 +8,8 @@ import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { Container, Content, Background } from './styles';
 import { GetValidationErrors } from '../../utils/GetValidationErrors';
-import { useAuth } from '../../hooks/AuthContext';
+import { useAuth } from '../../hooks/Auth';
+import { useToast } from '../../hooks/Toast';
 
 type SignInFormData = {
   email: string;
@@ -19,6 +20,7 @@ export const SingIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
   const { signIn } = useAuth();
+  const { addToast } = useToast();
 
   const handleSubmit = useCallback(async (data: SignInFormData) => {
     // Validação
@@ -33,18 +35,24 @@ export const SingIn: React.FC = () => {
       await schema.validate(data, {
         abortEarly: false,
       });
+
+      await signIn({
+        email: data.email,
+        password: data.password,
+      });
     } catch (err) {
       if (err instanceof Valid.ValidationError) {
         const errors = GetValidationErrors(err);
         formRef.current?.setErrors(errors);
       }
-    }
 
-    signIn({
-      email: data.email,
-      password: data.password,
-    });
-  }, [signIn]);
+      addToast({
+        type: 'error',
+        title: 'Erro na autenticação ',
+        description: 'Ocorreu um erro ao fazer login, cheque as credenciais.',
+      });
+    }
+  }, [signIn, addToast]);
 
   return (
     <Container>
