@@ -40,6 +40,11 @@ export const SingIn: React.FC = () => {
         email: data.email,
         password: data.password,
       });
+
+      addToast({
+        type: 'success',
+        title: 'Owl, Seja Bem Vindo ao GoBarber ',
+      });
     } catch (err) {
       if (err instanceof Valid.ValidationError) {
         const errors = GetValidationErrors(err);
