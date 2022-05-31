@@ -16,17 +16,21 @@ const icons = {
   success: <FiCheckCircle size={24} />,
 };
 
-const Toast: React.FC<ToasProps> = ({ message, style }) => {
+export const Toast: React.FC<ToasProps> = ({ message, style }) => {
   const { removeToast } = useToast();
 
   useEffect(() => {
     const timer = setTimeout(() => {
       removeToast(message.id);
     }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, [removeToast, message.id]);
 
   return (
-    <Container type={message.type} hasDescription={!!message.description} style={style}>
+    <Container type={message.type} hasDescription={Number(!!message.description)} style={style}>
       {icons[message.type || 'info']}
 
       <div>
@@ -43,5 +47,3 @@ const Toast: React.FC<ToasProps> = ({ message, style }) => {
     </Container>
   );
 };
-
-export default Toast;

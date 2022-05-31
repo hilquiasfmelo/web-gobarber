@@ -1,16 +1,15 @@
-import { SingIn } from './pages/SingIn';
-// import { SingUp } from './pages/SingUp';
-import MainStyle from './styles/main';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import { AppProvider } from './hooks';
+import { Routes } from './routes';
+import MainStyle from './styles/main';
 
-export function App() {
-  return (
-    <>
-      <MainStyle />
+export const App: React.FC = () => (
+  <BrowserRouter>
 
-      <AppProvider>
-        <SingIn />
-      </AppProvider>
-    </>
-  );
-}
+    <AppProvider>
+      <Routes />
+    </AppProvider>
+    <MainStyle />
+  </BrowserRouter>
+);

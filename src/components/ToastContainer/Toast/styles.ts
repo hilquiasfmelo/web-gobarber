@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 
 type ContainerProps = {
   type?: 'info' | 'error' | 'success';
-  hasDescription: boolean;
+  hasDescription: number;
 }
 
 const toastType = {
